@@ -1,0 +1,48 @@
+﻿<Window x:Class="VectorImages.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:VectorImages" mc:Ignorable="d" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" Title="MainWindow" Height="768" Width="1024" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="250" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBox x:Name="Search_T" Grid.Row="0" Foreground="#FF080808" HorizontalAlignment="Left" materialDesign:HintAssist.Hint="Buscar Nombre" Width="256" VerticalContentAlignment="Center" Margin="20,100,0,100" materialDesign:HintAssist.IsFloating="True" TextChanged="Search_T_TextChanged" />
+        <TextBox x:Name="NewName" Grid.Row="0" materialDesign:HintAssist.Hint="Nombre" materialDesign:HintAssist.IsFloating="True" Height="40" Width="250" Margin="336,10,256,150" />
+        <TextBox x:Name="NewDataPath" Grid.Row="0" materialDesign:HintAssist.Hint="Data Path" materialDesign:HintAssist.IsFloating="True" Width="250" Height="50" TextWrapping="Wrap" Margin="336,75,256,75" />
+        <Viewbox Height="200" Margin="632,25,10,25" Stretch="Uniform" ClipToBounds="True" Grid.Row="0" MaxWidth="200" MaxHeight="200">
+            <Path Stroke="Black" Stretch="Fill" StrokeThickness="1" Data="{Binding Path=Text,ElementName=NewDataPath}" />
+        </Viewbox>
+        <Button Width="100" Height="40" Grid.Row="0" Content="Ingresar" Margin="413,150,329,10" Click="Button_Click" />
+        <DataGrid x:Name="ImagenesDG" Grid.Row="1" VerticalScrollBarVisibility="Auto" AutoGenerateColumns="False" RowHeight="200" ColumnHeaderHeight="50" Background="LightGray" Height="Auto" VerticalAlignment="Top" Width="Auto">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="id" Width="50" Binding="{Binding Path=id}" />
+                <DataGridTextColumn Header="Nombre" Width="150" Binding="{Binding Path=nombre}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Data Path" Width="300" Binding="{Binding Path=data_path}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                            <Setter Property="TextBlock.TextAlignment" Value="Center" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTemplateColumn Width="300">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Viewbox Stretch="Uniform" StretchDirection="Both" MaxWidth="300" MaxHeight="200" ClipToBounds="True">
+                                <Path Stroke="Black" Stretch="Fill" StrokeThickness="1" Data="{Binding Path=data_path}" />
+                            </Viewbox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+
+        </DataGrid>
+
+
+    </Grid>
+</Window>
