@@ -79,5 +79,26 @@ namespace VectorImages.Controlador
                 throw;
             }
         }
+        public static void DeleteImg(string id)
+        {
+            if (id != "")
+            {
+                try
+                {
+                    string sql = "delete from Imagenes where id =" + id;
+
+                    SqlConnection conn = new SqlConnection(VectorImages.Properties.Resources.cadena);
+                    conn.Open();
+                    SqlCommand nc = new SqlCommand(sql, conn);
+                    nc.ExecuteNonQuery();
+                    conn.Close();
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+        }
     }
 }

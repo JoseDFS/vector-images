@@ -1,17 +1,43 @@
-﻿<Window x:Class="VectorImages.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:VectorImages" mc:Ignorable="d" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" Title="MainWindow" Height="768" Width="1024" WindowStartupLocation="CenterScreen">
+﻿<Window x:Class="VectorImages.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:VectorImages" mc:Ignorable="d" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" Title="VectorFromSVG" WindowState="Maximized">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="250" />
+            <RowDefinition Height="100" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBox x:Name="Search_T" Grid.Row="0" Foreground="#FF080808" HorizontalAlignment="Left" materialDesign:HintAssist.Hint="Buscar Nombre" Width="256" VerticalContentAlignment="Center" Margin="20,100,0,100" materialDesign:HintAssist.IsFloating="True" TextChanged="Search_T_TextChanged" />
-        <TextBox x:Name="NewName" Grid.Row="0" materialDesign:HintAssist.Hint="Nombre" materialDesign:HintAssist.IsFloating="True" Height="40" Width="250" Margin="336,10,256,150" />
-        <TextBox x:Name="NewDataPath" Grid.Row="0" materialDesign:HintAssist.Hint="Data Path" materialDesign:HintAssist.IsFloating="True" Width="250" Height="50" TextWrapping="Wrap" Margin="336,75,256,75" />
-        <Viewbox Height="200" Margin="632,25,10,25" Stretch="Uniform" ClipToBounds="True" Grid.Row="0" MaxWidth="200" MaxHeight="200">
-            <Path Stroke="Black" Stretch="Fill" StrokeThickness="1" Data="{Binding Path=Text,ElementName=NewDataPath}" />
-        </Viewbox>
-        <Button Width="100" Height="40" Grid.Row="0" Content="Ingresar" Margin="413,150,329,10" Click="Button_Click" />
-        <DataGrid x:Name="ImagenesDG" Grid.Row="1" VerticalScrollBarVisibility="Auto" AutoGenerateColumns="False" RowHeight="200" ColumnHeaderHeight="50" Background="LightGray" Height="Auto" VerticalAlignment="Top" Width="Auto">
+        <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Left" Margin="8">
+            <materialDesign:PackIcon Kind="Search" VerticalAlignment="Center"/>
+            <TextBox x:Name="Search_T" Height="40" Foreground="#FF080808" materialDesign:HintAssist.Hint="Buscar Nombre" Width="256"  Margin="8" materialDesign:HintAssist.IsFloating="True" TextChanged="Search_T_TextChanged" />
+        </StackPanel>
+        
+
+        <materialDesign:DialogHost HorizontalAlignment="Center" VerticalAlignment="Center" >
+            <materialDesign:DialogHost.DialogContent>
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Vertical">
+                        <TextBox x:Name="NewName"  materialDesign:HintAssist.Hint="Nombre" materialDesign:HintAssist.IsFloating="True" Height="40" Margin="16" Width="200" HorizontalAlignment="Left" />
+                        <TextBox x:Name="NewDataPath" materialDesign:HintAssist.Hint="Path" materialDesign:HintAssist.IsFloating="True" TextWrapping="Wrap" Margin="16" Height="350" Width="350" TextChanged="NewDataPath_TextChanged" />
+                        <Button Width="100" Height="40"  Content="SVG file" HorizontalAlignment="Left" Click="Button_Click" Margin="16" />
+                    </StackPanel>
+                    <StackPanel Width="400" VerticalAlignment="Center">
+                        <Button Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_Click_4" Margin="0,0,0,20">
+                            <materialDesign:PackIcon Kind="CloseBox" />
+                        </Button>
+                        <Viewbox Height="350" Width="350" VerticalAlignment="Center" Stretch="Uniform" ClipToBounds="True" MaxWidth="350" MaxHeight="350" Margin="24">
+                            <Path x:Name="Path" Stroke="Black" Stretch="Fill" StrokeThickness="1" />
+                            <!---->
+                        </Viewbox>
+                        <Button Width="150" Height="40" Content="Ingresar a DB" Margin="24,0,24,0" Background="#FF199C13" Click="Button_Click_1" />
+                    </StackPanel>
+
+                </StackPanel>
+            </materialDesign:DialogHost.DialogContent>
+            <Button HorizontalAlignment="Center" VerticalAlignment="Center" Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}" Content="Nueva Imagen" Margin="314,38,322,30" Click="Button_Click_3"/>
+        </materialDesign:DialogHost>
+        <!--<TextBox x:Name="NewDataPath" Grid.Row="0" materialDesign:HintAssist.Hint="Data Path" materialDesign:HintAssist.IsFloating="True" Width="350" TextWrapping="Wrap" HorizontalAlignment="Left" Margin="285,8,0,17" TextAlignment="Justify" Height="225" /> -->
+
+
+
+        <DataGrid x:Name="ImagenesDG" Grid.Row="1" VerticalScrollBarVisibility="Auto" AutoGenerateColumns="False" RowHeight="200" ColumnHeaderHeight="50" CanUserAddRows="False" Background="LightGray" Height="Auto" VerticalAlignment="Top" Width="Auto">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="id" Width="50" Binding="{Binding Path=id}" />
                 <DataGridTextColumn Header="Nombre" Width="150" Binding="{Binding Path=nombre}">
@@ -39,10 +65,17 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button x:Name="btn_eliminar" Content="Eliminar" Background="Red" Click="Button_Click_2" Width="100" Margin="100,0,0,0" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
-
         </DataGrid>
-
+        
 
     </Grid>
+
 </Window>
