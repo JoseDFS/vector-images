@@ -159,7 +159,7 @@ namespace VectorImages
             }
             catch
             {
-
+                Path.Data = Geometry.Parse("");
             }
             
         }
@@ -172,6 +172,13 @@ namespace VectorImages
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
             ImagenesDG.Columns[4].Visibility = Visibility.Visible;
+        }
+
+        private void btn_copy_Click(object sender, RoutedEventArgs e)
+        {
+            var path = ImagenesDG.Columns[2].GetCellContent(ImagenesDG.Items[ImagenesDG.SelectedIndex]) as TextBlock;
+            Console.WriteLine(path.Text);
+            Clipboard.SetText(path.Text);
         }
     }
 }

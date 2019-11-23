@@ -68,6 +68,13 @@
                 <DataGridTemplateColumn Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
+                            <Button x:Name="btn_copy" Content="Copy PATH"  Click="btn_copy_Click"  />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
                             <Button x:Name="btn_eliminar" Content="Eliminar" Background="Red" Click="Button_Click_2" Width="100" Margin="100,0,0,0" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
