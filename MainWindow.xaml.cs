@@ -26,7 +26,10 @@ namespace VectorImages
     /// </summary>
     public partial class MainWindow : Window
     {
-        
+        int contF = 0;
+        int contFF;
+        string[] files;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -80,43 +83,55 @@ namespace VectorImages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         { 
-            // if (NewName.Text != "" && NewDataPath.Text != "")
-            //{
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "Image Files(*.SVG)|*.SVG" +
             "|All files(*.*)|*.*";
             dialog.CheckFileExists = true;
-            dialog.Multiselect = false;
-            string newPath = "";
-            if (dialog.ShowDialog() == true )
+            dialog.Multiselect = true;
+            
+            contF = 0;
+            files =null;
+            if (dialog.ShowDialog() == true)
             {
                 try
                 {
-                    var ep = dialog.FileName;
+                    files = dialog.FileNames;
+                    contFF = files.Length;
+                    AddSVG(files);
+                      
+                        
                     
-                    XmlDocument document = new XmlDocument();
-                    document.Load(ep);
-                    XmlNodeList elemList = document.GetElementsByTagName("path");
-                    for (int i = 0; i < elemList.Count; i++)
-                    {
-                        string attrVal = elemList[i].Attributes["d"].Value;
-                        Console.WriteLine(attrVal);
-                        newPath += attrVal;
-                    }
                 }
                 catch
                 {
                     throw;
                 }
-                NewDataPath.Text = newPath; 
-
-                /*string data_txt = NewDataPath.Text.Replace("\"/><path d=\""," ");
-                data_txt = data_txt.Trim('"');*/
-                //
-
-                //ImagenesDG.ItemsSource = ImgsCRUD.FilterImg("").DefaultView;
-                //}
                 
+            }
+        }
+            
+        private void AddSVG(string[]a) {
+            if (contF < contFF)
+            {
+                dg_newV.IsOpen = true;
+                var ep = a[contF];
+                string newPath = "";
+                XmlDocument document = new XmlDocument();
+                document.Load(ep);
+                XmlNodeList elemList = document.GetElementsByTagName("path");
+                for (int i = 0; i < elemList.Count; i++)
+                {
+                    string attrVal = elemList[i].Attributes["d"].Value;
+                    Console.WriteLine(attrVal);
+                    newPath += attrVal;
+                }
+                NewDataPath.Text = newPath;
+                
+                contF++;
+            }
+            else
+            {
+                dg_newV.IsOpen = false;
             }
             
         }
@@ -135,6 +150,7 @@ namespace VectorImages
                 MessageBox.Show("Ingresado a DB");
                 NewName.Clear();
                 NewDataPath.Clear();
+                AddSVG(files);
             }
 
         }
@@ -146,10 +162,6 @@ namespace VectorImages
             ImgsCRUD.DeleteImg(id.Text);
             ImagenesDG.ItemsSource = ImgsCRUD.FilterImg("").DefaultView;
             ScrollViewer scrollViewer = GetVisualChild<ScrollViewer>(ImagenesDG);
-            if (scrollViewer != null)
-            {
-                scrollViewer.ScrollToTop();
-            }
         }
 
         private void NewDataPath_TextChanged(object sender, TextChangedEventArgs e)
@@ -171,7 +183,9 @@ namespace VectorImages
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
+            dg_newV.IsOpen = false;
             ImagenesDG.Columns[4].Visibility = Visibility.Visible;
+            AddSVG(files);
         }
 
         private void btn_copy_Click(object sender, RoutedEventArgs e)
