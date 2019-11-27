@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using MaterialDesignThemes.Wpf;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,21 +30,31 @@ namespace VectorImages
         int contF = 0;
         int contFF;
         string[] files;
+        SnackbarMessageQueue myMessageQueue = new SnackbarMessageQueue(TimeSpan.FromMilliseconds(3000));
 
         public MainWindow()
         {
+
             InitializeComponent();
 
-            
+            this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
+            this.MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth;
+
+            SnackBar_Mesaage.MessageQueue = myMessageQueue;
+
             Conexion con = new Conexion();
             if (con.AbrirConexion())
             {
-                MessageBox.Show("Conectado");
+                //MessageBox.Show("Conectado");
+                      
+
                 ImagenesDG.ItemsSource = ImgsCRUD.VerImgs().DefaultView;
+                SnackBar_Mesaage.MessageQueue.Enqueue("Conectado");
             }
             else
             {
-                MessageBox.Show("ERROR");
+                SnackBar_Mesaage.MessageQueue.Enqueue("Error connection");
+                Application.Current.Shutdown();
             }
 
 
@@ -97,10 +108,7 @@ namespace VectorImages
                 {
                     files = dialog.FileNames;
                     contFF = files.Length;
-                    AddSVG(files);
-                      
-                        
-                    
+                    AddSVG(files);  
                 }
                 catch
                 {
@@ -132,6 +140,8 @@ namespace VectorImages
             else
             {
                 dg_newV.IsOpen = false;
+                contF = 0;
+                contFF = 0;
             }
             
         }
@@ -147,10 +157,14 @@ namespace VectorImages
                 {
                     scrollViewer.ScrollToTop();
                 }
-                MessageBox.Show("Ingresado a DB");
+                myMessageQueue = new SnackbarMessageQueue(TimeSpan.FromMilliseconds(1000));
+                SnackBar_Mesaage.MessageQueue = myMessageQueue;
+                SnackBar_Mesaage.MessageQueue.Enqueue("Ingresado a DB");
                 NewName.Clear();
                 NewDataPath.Clear();
+                ImagenesDG.Columns[5].Visibility = Visibility.Visible;
                 AddSVG(files);
+                
             }
 
         }
@@ -161,30 +175,33 @@ namespace VectorImages
             Console.WriteLine(id.Text);
             ImgsCRUD.DeleteImg(id.Text);
             ImagenesDG.ItemsSource = ImgsCRUD.FilterImg("").DefaultView;
-            ScrollViewer scrollViewer = GetVisualChild<ScrollViewer>(ImagenesDG);
+            ImagenesDG.Columns[4].Visibility = Visibility.Visible;
         }
 
         private void NewDataPath_TextChanged(object sender, TextChangedEventArgs e)
         {
-            try {
+            try
+            {
                 Path.Data = Geometry.Parse(NewDataPath.Text);
             }
             catch
             {
                 Path.Data = Geometry.Parse("");
-            }
-            
+            }   
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            ImagenesDG.Columns[4].Visibility = Visibility.Hidden;
+            ImagenesDG.Columns[5].Visibility = Visibility.Hidden;
+            dg_newV.IsOpen = true;
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
             dg_newV.IsOpen = false;
-            ImagenesDG.Columns[4].Visibility = Visibility.Visible;
+            ImagenesDG.Columns[5].Visibility = Visibility.Visible;
+            NewName.Clear();
+            NewDataPath.Clear();
             AddSVG(files);
         }
 
@@ -193,6 +210,16 @@ namespace VectorImages
             var path = ImagenesDG.Columns[2].GetCellContent(ImagenesDG.Items[ImagenesDG.SelectedIndex]) as TextBlock;
             Console.WriteLine(path.Text);
             Clipboard.SetText(path.Text);
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void Minimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
         }
     }
 }
